@@ -2,6 +2,7 @@ import React from 'react';
 import Home from './Home'
 import ReactDOM from 'react-dom';
 import {connect} from "react-redux";
+import Cart from "./Cart";
 
 class MasterForm extends React.Component {
     constructor(props) {
@@ -118,7 +119,7 @@ function Step2(props) {
         return null
     }
     return(
-        '<div>some div<\div>'
+        <Cart />
     );
 }
 

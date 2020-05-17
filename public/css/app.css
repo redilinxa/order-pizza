@@ -19712,3 +19712,7 @@ input[type=range]::-ms-thumb {
   height: 200px;
 }
 
+.btn-floating .material-icons i {
+  line-height: 1;
+}
+
