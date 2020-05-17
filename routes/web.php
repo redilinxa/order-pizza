@@ -15,10 +15,10 @@ use Illuminate\Support\Facades\Route;
 Auth::routes();
 
 Route::middleware('auth')->group(function (){
-    Route::get('/', function () {
-        return view('welcome');
+    Route::get('/', 'HomeController@index')->name('home');
+    Route::get('/home', function (){
+        return response()->redirectTo('/');
     });
-    Route::get('/home', 'HomeController@index')->name('home');
 });
 
 
