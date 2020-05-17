@@ -28,7 +28,7 @@
             @endif
 
             <div class="content">
-                <div id = "example"></div>
+                <div id = "root"></div>
             </div>
         </div>
     </body>
