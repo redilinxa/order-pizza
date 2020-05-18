@@ -2,6 +2,7 @@ import React from 'react';
 import Home from './Home'
 import ReactDOM from 'react-dom';
 import {connect} from "react-redux";
+import Cart from "./Cart";
 
 class MasterForm extends React.Component {
     constructor(props) {
@@ -80,8 +81,8 @@ class MasterForm extends React.Component {
                     {this.previousButton()}
                     {this.nextButton()}
                     {/*
-        render the form steps and pass required props in
-      */}
+                       render the form steps and pass required props in
+                    */}
                     <Step1
                         currentStep={this.state.currentStep}
                         handleChange={this.handleChange}
@@ -97,7 +98,6 @@ class MasterForm extends React.Component {
                         handleChange={this.handleChange}
                         password={this.state.password}
                     />
-
                 </form>
             </React.Fragment>
         );
@@ -118,7 +118,7 @@ function Step2(props) {
         return null
     }
     return(
-        '<div>some div<\div>'
+        <Cart />
     );
 }
 

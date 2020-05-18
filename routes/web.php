@@ -19,6 +19,12 @@ Route::middleware('auth')->group(function (){
     Route::get('/home', function (){
         return response()->redirectTo('/');
     });
+    Route::get('/api/products', 'ProductController@index');
+
+    Route::get('/cart', 'CartController@index');
+    Route::post('/cart/{productId}/add', 'CartController@addToCart');
+    Route::put('/cart/{productId}/{qty}/edit', 'CartController@editQty');
+    Route::delete('/cart/{productId}/remove', 'CartController@removeFromCart');
 });
 
 
