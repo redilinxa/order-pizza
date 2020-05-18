@@ -16,13 +16,12 @@ class Cart extends Component{
     //to add the quantity
     handleAddQuantity = (id)=>{
         this.props.addQuantity(id);
-        this.forceUpdate();
+        this.props.listCartProducts();
     }
     //to substruct from the quantity
     handleSubtractQuantity = (id)=>{
         this.props.subtractQuantity(id);
-        this.forceUpdate();
-
+        this.props.listCartProducts();
     }
     render(){
 
@@ -36,18 +35,22 @@ class Cart extends Component{
                                 <img src={"/images/"+item.image_url} alt={item.image_url} className=""/>
                             </div>
 
-                            <div className="item-desc">
-                                <span className="title">{item.name}</span>
-                                <p>{item.description}</p>
-                                <p><b>Price: {item.price}$</b></p>
-                                <p>
-                                    <b>Quantity: {item.quantity}</b>
-                                </p>
-                                <div className="add-remove">
-                                    <button src="#"><i className="material-icons" onClick={()=>{this.handleAddQuantity(item.id)}}>arrow_drop_up</i></button>
-                                    <button src="#"><i className="material-icons" onClick={()=>{this.handleSubtractQuantity(item.id)}}>arrow_drop_down</i></button>
+                            <div className="item-desc d-flex w-100">
+                                <div>
+                                    <span className="title">{item.name}</span>
+                                    <p>{item.description}</p>
                                 </div>
-                                <button className="waves-effect waves-light btn pink remove" onClick={()=>{this.handleRemove(item.id)}}>Remove</button>
+                                <div class="ml-auto">
+                                    <p><b>Price: {item.price}$</b></p>
+                                    <p>
+                                        <b>Quantity: {item.quantity}</b>
+                                    </p>
+                                    <div className="add-remove">
+                                        <button src="#"><i className="material-icons" onClick={()=>{this.handleAddQuantity(item.id)}}>arrow_drop_up</i></button>
+                                        <button src="#"><i className="material-icons" onClick={()=>{this.handleSubtractQuantity(item.id)}}>arrow_drop_down</i></button>
+                                    </div>
+                                    <button className="waves-effect waves-light btn pink remove" onClick={()=>{this.handleRemove(item.id)}}>Remove</button>
+                                </div>
                             </div>
 
                         </li>

@@ -6,6 +6,7 @@ const initState = {
     total: 0
 };
 const updateRemoteProductCart = (id,qty)=>{
+    console.log(id,qty);
     axios.put('/cart/'+id+'/'+qty+'/edit').then(response => {
         console.log(response.data);
     });
@@ -32,7 +33,6 @@ const cartReducer= (state = initState,action)=>{
         }
     }
     if(action.type === LIST_CART_PRODUCTS){
-        console.log(action.products);
         return {
             ...state,
             addedItems:action.products,
@@ -46,7 +46,6 @@ const cartReducer= (state = initState,action)=>{
          if(existed_item)
          {
              addedItem.quantity += 1
-             console.log(addedItem.quantity);
              updateRemoteProductCart(addedItem.id,addedItem.quantity)
              return{
                 ...state,
@@ -81,7 +80,7 @@ const cartReducer= (state = initState,action)=>{
     }
     //INSIDE CART COMPONENT
     if(action.type=== ADD_QUANTITY){
-        let addedItem = state.items.find(item=> item.id === action.id)
+          let addedItem = state.items.find(item=> item.id === action.id)
           addedItem.quantity += 1
           updateRemoteProductCart(addedItem.id,addedItem.quantity);
           let newTotal = state.total + parseFloat(addedItem.price)
