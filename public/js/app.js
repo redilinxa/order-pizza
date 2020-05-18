@@ -69471,10 +69471,12 @@ var Cart = /*#__PURE__*/function (_Component) {
           alt: item.image_url,
           className: ""
         })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          className: "item-desc"
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+          className: "item-desc d-flex w-100"
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
           className: "title"
-        }, item.name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, item.description), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, "Price: ", item.price, "$")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, "Quantity: ", item.quantity)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        }, item.name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, item.description)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "ml-auto"
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, "Price: ", item.price, "$")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, "Quantity: ", item.quantity)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "add-remove"
         }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
           src: "#"
@@ -69495,7 +69497,7 @@ var Cart = /*#__PURE__*/function (_Component) {
           onClick: function onClick() {
             _this2.handleRemove(item.id);
           }
-        }, "Remove")));
+        }, "Remove"))));
       }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "No pizzas to order.");
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "cart"
@@ -70021,6 +70023,7 @@ function getProducts() {
 function listCartProducts() {
   return function (dispatch) {
     return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/cart').then(function (response) {
+      console.log(response.data);
       dispatch({
         type: _action_types_cart_actions__WEBPACK_IMPORTED_MODULE_1__["LIST_CART_PRODUCTS"],
         products: response.data.products,
@@ -70131,20 +70134,21 @@ var initState = {
 };
 
 var updateRemoteProductCart = function updateRemoteProductCart(id, qty) {
+  console.log(id, qty);
   axios__WEBPACK_IMPORTED_MODULE_1___default.a.put('/cart/' + id + '/' + qty + '/edit').then(function (response) {
-    console.log(response.data);
+    return response.data;
   });
 };
 
 var removeRemoteProduct = function removeRemoteProduct(id) {
   axios__WEBPACK_IMPORTED_MODULE_1___default.a["delete"]('/cart/' + id + '/remove').then(function (response) {
-    console.log(response.data);
+    return response.data;
   });
 };
 
 var addRemoteProduct = function addRemoteProduct(id) {
   axios__WEBPACK_IMPORTED_MODULE_1___default.a.post('/cart/' + id + '/add').then(function (response) {
-    console.log(response.data);
+    return response.data;
   });
 };
 
@@ -70160,11 +70164,8 @@ var cartReducer = function cartReducer() {
   }
 
   if (action.type === _actions_action_types_cart_actions__WEBPACK_IMPORTED_MODULE_0__["LIST_CART_PRODUCTS"]) {
-    console.log(action.products);
-    return _objectSpread(_objectSpread({}, state), {}, {
-      addedItems: action.products,
-      total: action.total
-    });
+    console.log(state.items);
+    return _objectSpread({}, state);
   }
 
   if (action.type === _actions_action_types_cart_actions__WEBPACK_IMPORTED_MODULE_0__["ADD_TO_CART"]) {
@@ -70178,19 +70179,18 @@ var cartReducer = function cartReducer() {
 
     if (existed_item) {
       addedItem.quantity += 1;
-      console.log(addedItem.quantity);
       updateRemoteProductCart(addedItem.id, addedItem.quantity);
       return _objectSpread(_objectSpread({}, state), {}, {
-        total: state.total + parseFloat(addedItem.price)
+        total: (parseFloat(state.total) + parseFloat(addedItem.price)).toFixed(2)
       });
     } else {
       addRemoteProduct(addedItem.id);
       addedItem.quantity = 1; //calculating the total
 
-      var newTotal = state.total + parseFloat(addedItem.price);
+      var newTotal = parseFloat(state.total) + parseFloat(addedItem.price);
       return _objectSpread(_objectSpread({}, state), {}, {
         addedItems: [].concat(_toConsumableArray(state.addedItems), [addedItem]),
-        total: newTotal
+        total: newTotal.toFixed(2)
       });
     }
   }
@@ -70204,11 +70204,11 @@ var cartReducer = function cartReducer() {
       return action.id !== item.id;
     }); //calculating the total
 
-    var _newTotal = state.total - parseFloat(itemToRemove.price) * itemToRemove.quantity;
+    var _newTotal = parseFloat(state.total) - parseFloat(itemToRemove.price) * itemToRemove.quantity;
 
     return _objectSpread(_objectSpread({}, state), {}, {
       addedItems: new_items,
-      total: _newTotal
+      total: _newTotal.toFixed(2)
     });
   } //INSIDE CART COMPONENT
 
@@ -70219,12 +70219,13 @@ var cartReducer = function cartReducer() {
     });
 
     _addedItem.quantity += 1;
+    console.log(state.addedItems);
     updateRemoteProductCart(_addedItem.id, _addedItem.quantity);
 
-    var _newTotal2 = state.total + parseFloat(_addedItem.price);
+    var _newTotal2 = parseFloat(state.total) + parseFloat(_addedItem.price);
 
     return _objectSpread(_objectSpread({}, state), {}, {
-      total: _newTotal2
+      total: _newTotal2.toFixed(2)
     });
   }
 
@@ -70241,33 +70242,33 @@ var cartReducer = function cartReducer() {
         return item.id !== action.id;
       });
 
-      var _newTotal3 = state.total - parseFloat(_addedItem2.price);
+      var _newTotal3 = parseFloat(state.total) - parseFloat(_addedItem2.price);
 
       return _objectSpread(_objectSpread({}, state), {}, {
         addedItems: _new_items,
-        total: _newTotal3
+        total: _newTotal3.toFixed(2)
       });
     } else {
       _addedItem2.quantity -= 1;
       updateRemoteProductCart(_addedItem2.id, _addedItem2.quantity);
 
-      var _newTotal4 = state.total - parseFloat(_addedItem2.price);
+      var _newTotal4 = parseFloat(state.total) - parseFloat(_addedItem2.price);
 
       return _objectSpread(_objectSpread({}, state), {}, {
-        total: _newTotal4
+        total: _newTotal4.toFixed(2)
       });
     }
   }
 
   if (action.type === _actions_action_types_cart_actions__WEBPACK_IMPORTED_MODULE_0__["ADD_SHIPPING"]) {
     return _objectSpread(_objectSpread({}, state), {}, {
-      total: state.total + 2
+      total: (parseFloat(state.total) + 2).toFixed(2)
     });
   }
 
   if (action.type === 'SUB_SHIPPING') {
     return _objectSpread(_objectSpread({}, state), {}, {
-      total: state.total - 2
+      total: (parseFloat(state.total) - 2).toFixed(2)
     });
   } else {
     return state;

@@ -16,12 +16,12 @@ class Cart extends Component{
     //to add the quantity
     handleAddQuantity = (id)=>{
         this.props.addQuantity(id);
-        this.props.listCartProducts();
+        this.forceUpdate();
     }
     //to substruct from the quantity
     handleSubtractQuantity = (id)=>{
         this.props.subtractQuantity(id);
-        this.props.listCartProducts();
+        this.forceUpdate();
     }
     render(){
 
@@ -40,7 +40,7 @@ class Cart extends Component{
                                     <span className="title">{item.name}</span>
                                     <p>{item.description}</p>
                                 </div>
-                                <div class="ml-auto">
+                                <div className="ml-auto">
                                     <p><b>Price: {item.price}$</b></p>
                                     <p>
                                         <b>Quantity: {item.quantity}</b>

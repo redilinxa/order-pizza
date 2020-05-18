@@ -12,6 +12,7 @@ export function getProducts(){
 export function listCartProducts(){
     return function(dispatch){
         return axios.get('/cart').then(response => {
+            console.log(response.data);
             dispatch({type:LIST_CART_PRODUCTS, products: response.data.products, total:response.data.total})
         })
     }

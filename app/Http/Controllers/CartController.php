@@ -20,12 +20,15 @@ class CartController extends Controller
                 'name' => $item->name,
                 'description' => $item->associatedModel->description,
                 'image_url' => $item->associatedModel->image_url,
-                'price' => $item->price,
-                'quantity' => $item->quantity
+                'price' => number_format($item->price,2),
+                'quantity' => $item->quantity,
+                'attributes' => $item->associatedModel->attributes,
+                'updated_at' => $item->associatedModel->updated_at,
+                'created_at' => $item->associatedModel->created_at
             ];
         });
 
-        return response()->json(['products'=>$items,'total'=>\Cart::session($userId)->getTotal()]);
+        return response()->json(['products'=>$items,'total'=>number_format(number_format(\Cart::session($userId)->getTotal(),2),2)]);
     }
 
     public function addToCart(Request $request, $productId){
@@ -41,7 +44,7 @@ class CartController extends Controller
             'attributes' => array(),
             'associatedModel' => $product
         ));
-        return response()->json(['product'=>$product,'total'=>\Cart::session($userId)->getTotal()]);
+        return response()->json(['product'=>$product,'total'=>number_format(\Cart::session($userId)->getTotal(),2)]);
     }
 
     public function editQty(Request $request, $productId, $qty){
@@ -54,7 +57,7 @@ class CartController extends Controller
                 'value' => $qty
             ]
         ]);
-        return response()->json(['product'=>$product,'total'=>\Cart::session($userId)->getTotal()]);
+        return response()->json(['product'=>$product,'total'=>number_format(\Cart::session($userId)->getTotal(),2)]);
     }
 
     public function removeFromCart(Request $request, $productId){
@@ -62,6 +65,6 @@ class CartController extends Controller
         $product = Product::find($productId);
 
         \Cart::session($userId)->remove($productId);
-        return response()->json(['product'=>$product,'total'=>\Cart::session($userId)->getTotal()]);
+        return response()->json(['product'=>$product,'total'=>number_format(\Cart::session($userId)->getTotal(),2)]);
     }
 }

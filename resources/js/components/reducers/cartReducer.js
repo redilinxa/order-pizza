@@ -8,19 +8,19 @@ const initState = {
 const updateRemoteProductCart = (id,qty)=>{
     console.log(id,qty);
     axios.put('/cart/'+id+'/'+qty+'/edit').then(response => {
-        console.log(response.data);
+        return response.data;
     });
 }
 
 const removeRemoteProduct = (id)=>{
     axios.delete('/cart/'+id+'/remove').then(response => {
-        console.log(response.data);
+        return response.data;
     });
 }
 
 const addRemoteProduct = (id)=>{
     axios.post('/cart/'+id+'/add').then(response => {
-        console.log(response.data);
+        return response.data;
     });
 }
 const cartReducer= (state = initState,action)=>{
@@ -33,10 +33,11 @@ const cartReducer= (state = initState,action)=>{
         }
     }
     if(action.type === LIST_CART_PRODUCTS){
+        console.log(state.items);
         return {
             ...state,
-            addedItems:action.products,
-            total: action.total
+            //addedItems: action.products,
+            //total: action.total
         }
     }
     if(action.type === ADD_TO_CART){
@@ -49,19 +50,18 @@ const cartReducer= (state = initState,action)=>{
              updateRemoteProductCart(addedItem.id,addedItem.quantity)
              return{
                 ...state,
-                 total: state.total + parseFloat(addedItem.price)
-                  }
-        }
-         else{
+                total: (parseFloat(state.total) + parseFloat(addedItem.price)).toFixed(2)
+              }
+         }else{
             addRemoteProduct(addedItem.id);
             addedItem.quantity = 1;
             //calculating the total
-            let newTotal = state.total + parseFloat(addedItem.price)
+            let newTotal = parseFloat(state.total) + parseFloat(addedItem.price)
 
             return{
                 ...state,
                 addedItems: [...state.addedItems, addedItem],
-                total : newTotal
+                total: newTotal.toFixed(2)
             }
         }
     }
@@ -71,23 +71,24 @@ const cartReducer= (state = initState,action)=>{
         let new_items = state.addedItems.filter(item=> action.id !== item.id)
 
         //calculating the total
-        let newTotal = state.total - (parseFloat(itemToRemove.price) * itemToRemove.quantity )
+        let newTotal = parseFloat(state.total) - (parseFloat(itemToRemove.price) * itemToRemove.quantity)
         return{
             ...state,
             addedItems: new_items,
-            total: newTotal
+            total: newTotal.toFixed(2)
         }
     }
     //INSIDE CART COMPONENT
     if(action.type=== ADD_QUANTITY){
-          let addedItem = state.items.find(item=> item.id === action.id)
-          addedItem.quantity += 1
-          updateRemoteProductCart(addedItem.id,addedItem.quantity);
-          let newTotal = state.total + parseFloat(addedItem.price)
-          return{
-              ...state,
-              total: newTotal
-          }
+        let addedItem = state.items.find(item=> item.id === action.id)
+        addedItem.quantity += 1
+        console.log(state.addedItems);
+        updateRemoteProductCart(addedItem.id,addedItem.quantity);
+        let newTotal = parseFloat(state.total) + parseFloat(addedItem.price)
+        return{
+          ...state,
+          total: newTotal.toFixed(2)
+        }
     }
     if(action.type=== SUB_QUANTITY){
         let addedItem = state.items.find(item=> item.id === action.id)
@@ -95,20 +96,20 @@ const cartReducer= (state = initState,action)=>{
         if(addedItem.quantity === 1){
             removeRemoteProduct(addedItem.id);
             let new_items = state.addedItems.filter(item=>item.id !== action.id)
-            let newTotal = state.total - parseFloat(addedItem.price)
+            let newTotal = parseFloat(state.total) - parseFloat(addedItem.price)
             return{
                 ...state,
                 addedItems: new_items,
-                total: newTotal
+                total: newTotal.toFixed(2)
             }
         }
         else {
             addedItem.quantity -= 1
             updateRemoteProductCart(addedItem.id,addedItem.quantity);
-            let newTotal = state.total - parseFloat(addedItem.price)
+            let newTotal = parseFloat(state.total) - parseFloat(addedItem.price)
             return{
                 ...state,
-                total: newTotal
+                total: newTotal.toFixed(2)
             }
         }
 
@@ -117,14 +118,14 @@ const cartReducer= (state = initState,action)=>{
     if(action.type=== ADD_SHIPPING){
           return{
               ...state,
-              total: state.total + 2
+              total: (parseFloat(state.total) + 2).toFixed(2)
           }
     }
 
     if(action.type=== 'SUB_SHIPPING'){
         return{
             ...state,
-            total: state.total - 2
+            total: (parseFloat(state.total) - 2).toFixed(2)
         }
   }
 

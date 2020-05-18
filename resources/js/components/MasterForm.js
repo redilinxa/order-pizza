@@ -81,8 +81,8 @@ class MasterForm extends React.Component {
                     {this.previousButton()}
                     {this.nextButton()}
                     {/*
-        render the form steps and pass required props in
-      */}
+                       render the form steps and pass required props in
+                    */}
                     <Step1
                         currentStep={this.state.currentStep}
                         handleChange={this.handleChange}
@@ -98,7 +98,6 @@ class MasterForm extends React.Component {
                         handleChange={this.handleChange}
                         password={this.state.password}
                     />
-
                 </form>
             </React.Fragment>
         );

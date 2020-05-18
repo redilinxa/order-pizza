@@ -19716,3 +19716,22 @@ input[type=range]::-ms-thumb {
   line-height: 1;
 }
 
+.collection .collection-item.avatar {
+  padding-left: 0;
+}
+
+.collection .collection-item.avatar .item-img {
+  max-width: 300px;
+  margin-right: 30px;
+}
+
+.collection .collection-item.avatar .item-img img {
+  width: 100%;
+}
+
+.collection .collection-item.avatar .add-remove button {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
