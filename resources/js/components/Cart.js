@@ -18,7 +18,7 @@ class Cart extends Component{
         this.props.addQuantity(id);
         this.forceUpdate();
     }
-    //to substruct from the quantity
+    //to subtract from the quantity
     handleSubtractQuantity = (id)=>{
         this.props.subtractQuantity(id);
         this.forceUpdate();
@@ -66,8 +66,8 @@ class Cart extends Component{
                 <h5>You have ordered:</h5>
                 <ul className="collection">
                     {addedItems}
+                    <li className="collection-item"><b>Total: {this.props.cartTotal} $</b></li>
                 </ul>
-                <Recipe />
             </div>
         )
     }
@@ -77,7 +77,7 @@ class Cart extends Component{
 const mapStateToProps = (state)=>{
     return{
         items: state.addedItems,
-        //addedItems: state.addedItems
+        cartTotal: state.total
     }
 }
 const mapDispatchToProps = (dispatch)=>{

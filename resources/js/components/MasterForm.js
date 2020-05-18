@@ -1,16 +1,14 @@
 import React from 'react';
 import Home from './Home'
-import ReactDOM from 'react-dom';
-import {connect} from "react-redux";
 import Cart from "./Cart";
+import Order from "./Order";
 
 class MasterForm extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
             currentStep: 1,
-            pizzas:  '',
-            selectedPizzas: '',
+            shippingAddress:  '',
         }
     }
 
@@ -23,7 +21,7 @@ class MasterForm extends React.Component {
 
     handleSubmit = event => {
         event.preventDefault()
-        const { selectedPizzas } = this.state
+        const { addedItems,total,shippingAddress } = this.state
 
     }
 
@@ -128,7 +126,8 @@ function Step3(props) {
     }
     return(
         <React.Fragment>
-            <button className="btn btn-success btn-block">Sign up</button>
+            <Order />
+            <button className="btn btn-success btn-block">Confirm order!</button>
         </React.Fragment>
     );
 }

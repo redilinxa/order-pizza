@@ -17,6 +17,14 @@ class Recipe extends Component{
         }
     }
 
+    handleShippingAddress = (e)=>{
+        // this.setState(state=>{
+        //     return {
+        //         shippingAddress: e.target.value
+        //     }
+        // })
+    }
+
     render(){
 
         return(
@@ -28,6 +36,9 @@ class Recipe extends Component{
                     </label>
                 </li>
                 <li className="collection-item"><b>Total: {this.props.total} $</b></li>
+                <li className="collection-item">
+                    <input type="textarea" ref="shippingAddress" onChange= {this.handleShippingAddress} />
+                </li>
             </div>
         )
     }

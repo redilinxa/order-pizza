@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use Illuminate\Validation\ValidationException;
 
 class Handler extends ExceptionHandler
 {
@@ -50,6 +51,10 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
+        // Intercepts all validation exceptions thrown by the FormRequest and parse them as json
+        if ($exception instanceof ValidationException){
+            return response()->json($exception->errorBag,422);
+        }
         return parent::render($request, $exception);
     }
 }
