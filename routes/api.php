@@ -19,7 +19,3 @@ Route::middleware('auth:api')->group(function () {
         return $request->user();
     });
 });
-Route::get('/cart', 'CartController@index');
-Route::post('/cart/{productId}/add', 'CartController@addToCart');
-Route::put('/cart/{productId}/remove', 'CartController@removeFromCart');
-Route::get('/products', 'ProductController@index');

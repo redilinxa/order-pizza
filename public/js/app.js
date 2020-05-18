@@ -69427,16 +69427,12 @@ var Cart = /*#__PURE__*/function (_Component) {
 
   var _super = _createSuper(Cart);
 
-  function Cart() {
+  function Cart(props) {
     var _this;
 
     _classCallCheck(this, Cart);
 
-    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    _this = _super.call.apply(_super, [this].concat(args));
+    _this = _super.call(this, props);
 
     _defineProperty(_assertThisInitialized(_this), "handleRemove", function (id) {
       _this.props.removeItem(id);
@@ -69454,8 +69450,10 @@ var Cart = /*#__PURE__*/function (_Component) {
       _this.forceUpdate();
     });
 
+    props.listCartProducts();
     return _this;
-  }
+  } //to remove the item completely
+
 
   _createClass(Cart, [{
     key: "render",
@@ -69527,6 +69525,9 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
     },
     subtractQuantity: function subtractQuantity(id) {
       dispatch(Object(_actions_cartActions__WEBPACK_IMPORTED_MODULE_2__["subtractQuantity"])(id));
+    },
+    listCartProducts: function listCartProducts() {
+      dispatch(Object(_actions_cartActions__WEBPACK_IMPORTED_MODULE_2__["listCartProducts"])());
     }
   };
 };
@@ -70019,7 +70020,7 @@ function getProducts() {
 }
 function listCartProducts() {
   return function (dispatch) {
-    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/api/cart').then(function (response) {
+    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/cart').then(function (response) {
       dispatch({
         type: _action_types_cart_actions__WEBPACK_IMPORTED_MODULE_1__["LIST_CART_PRODUCTS"],
         products: response.data.products,
@@ -70101,6 +70102,8 @@ react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEB
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _actions_action_types_cart_actions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../actions/action-types/cart-actions */ "./resources/js/components/actions/action-types/cart-actions.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -70120,10 +70123,29 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 
+
 var initState = {
   items: [],
   addedItems: [],
   total: 0
+};
+
+var updateRemoteProductCart = function updateRemoteProductCart(id, qty) {
+  axios__WEBPACK_IMPORTED_MODULE_1___default.a.put('/cart/' + id + '/' + qty + '/edit').then(function (response) {
+    console.log(response.data);
+  });
+};
+
+var removeRemoteProduct = function removeRemoteProduct(id) {
+  axios__WEBPACK_IMPORTED_MODULE_1___default.a["delete"]('/cart/' + id + '/remove').then(function (response) {
+    console.log(response.data);
+  });
+};
+
+var addRemoteProduct = function addRemoteProduct(id) {
+  axios__WEBPACK_IMPORTED_MODULE_1___default.a.post('/cart/' + id + '/add').then(function (response) {
+    console.log(response.data);
+  });
 };
 
 var cartReducer = function cartReducer() {
@@ -70138,6 +70160,7 @@ var cartReducer = function cartReducer() {
   }
 
   if (action.type === _actions_action_types_cart_actions__WEBPACK_IMPORTED_MODULE_0__["LIST_CART_PRODUCTS"]) {
+    console.log(action.products);
     return _objectSpread(_objectSpread({}, state), {}, {
       addedItems: action.products,
       total: action.total
@@ -70155,10 +70178,13 @@ var cartReducer = function cartReducer() {
 
     if (existed_item) {
       addedItem.quantity += 1;
+      console.log(addedItem.quantity);
+      updateRemoteProductCart(addedItem.id, addedItem.quantity);
       return _objectSpread(_objectSpread({}, state), {}, {
         total: state.total + parseFloat(addedItem.price)
       });
     } else {
+      addRemoteProduct(addedItem.id);
       addedItem.quantity = 1; //calculating the total
 
       var newTotal = state.total + parseFloat(addedItem.price);
@@ -70173,13 +70199,13 @@ var cartReducer = function cartReducer() {
     var itemToRemove = state.addedItems.find(function (item) {
       return action.id === item.id;
     });
+    removeRemoteProduct(itemToRemove.id);
     var new_items = state.addedItems.filter(function (item) {
       return action.id !== item.id;
     }); //calculating the total
 
     var _newTotal = state.total - parseFloat(itemToRemove.price) * itemToRemove.quantity;
 
-    console.log(itemToRemove);
     return _objectSpread(_objectSpread({}, state), {}, {
       addedItems: new_items,
       total: _newTotal
@@ -70193,6 +70219,7 @@ var cartReducer = function cartReducer() {
     });
 
     _addedItem.quantity += 1;
+    updateRemoteProductCart(_addedItem.id, _addedItem.quantity);
 
     var _newTotal2 = state.total + parseFloat(_addedItem.price);
 
@@ -70208,6 +70235,8 @@ var cartReducer = function cartReducer() {
 
 
     if (_addedItem2.quantity === 1) {
+      removeRemoteProduct(_addedItem2.id);
+
       var _new_items = state.addedItems.filter(function (item) {
         return item.id !== action.id;
       });
@@ -70220,6 +70249,7 @@ var cartReducer = function cartReducer() {
       });
     } else {
       _addedItem2.quantity -= 1;
+      updateRemoteProductCart(_addedItem2.id, _addedItem2.quantity);
 
       var _newTotal4 = state.total - parseFloat(_addedItem2.price);
 

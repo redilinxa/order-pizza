@@ -1,10 +1,27 @@
 import { LOAD_PRODUCTS,LIST_CART_PRODUCTS, ADD_TO_CART,REMOVE_ITEM,SUB_QUANTITY,ADD_QUANTITY,ADD_SHIPPING } from '../actions/action-types/cart-actions'
+import axios from 'axios'
 const initState = {
     items: [],
     addedItems:[],
     total: 0
 };
+const updateRemoteProductCart = (id,qty)=>{
+    axios.put('/cart/'+id+'/'+qty+'/edit').then(response => {
+        console.log(response.data);
+    });
+}
 
+const removeRemoteProduct = (id)=>{
+    axios.delete('/cart/'+id+'/remove').then(response => {
+        console.log(response.data);
+    });
+}
+
+const addRemoteProduct = (id)=>{
+    axios.post('/cart/'+id+'/add').then(response => {
+        console.log(response.data);
+    });
+}
 const cartReducer= (state = initState,action)=>{
     console.log(action.type);
     //INSIDE HOME COMPONENT
@@ -15,6 +32,7 @@ const cartReducer= (state = initState,action)=>{
         }
     }
     if(action.type === LIST_CART_PRODUCTS){
+        console.log(action.products);
         return {
             ...state,
             addedItems:action.products,
@@ -27,13 +45,16 @@ const cartReducer= (state = initState,action)=>{
          let existed_item= state.addedItems.find(item=> action.id === item.id)
          if(existed_item)
          {
-            addedItem.quantity += 1
+             addedItem.quantity += 1
+             console.log(addedItem.quantity);
+             updateRemoteProductCart(addedItem.id,addedItem.quantity)
              return{
                 ...state,
                  total: state.total + parseFloat(addedItem.price)
                   }
         }
          else{
+            addRemoteProduct(addedItem.id);
             addedItem.quantity = 1;
             //calculating the total
             let newTotal = state.total + parseFloat(addedItem.price)
@@ -47,11 +68,11 @@ const cartReducer= (state = initState,action)=>{
     }
     if(action.type === REMOVE_ITEM){
         let itemToRemove= state.addedItems.find(item=> action.id === item.id)
+        removeRemoteProduct(itemToRemove.id);
         let new_items = state.addedItems.filter(item=> action.id !== item.id)
 
         //calculating the total
         let newTotal = state.total - (parseFloat(itemToRemove.price) * itemToRemove.quantity )
-        console.log(itemToRemove)
         return{
             ...state,
             addedItems: new_items,
@@ -62,6 +83,7 @@ const cartReducer= (state = initState,action)=>{
     if(action.type=== ADD_QUANTITY){
         let addedItem = state.items.find(item=> item.id === action.id)
           addedItem.quantity += 1
+          updateRemoteProductCart(addedItem.id,addedItem.quantity);
           let newTotal = state.total + parseFloat(addedItem.price)
           return{
               ...state,
@@ -72,6 +94,7 @@ const cartReducer= (state = initState,action)=>{
         let addedItem = state.items.find(item=> item.id === action.id)
         //if the qt == 0 then it should be removed
         if(addedItem.quantity === 1){
+            removeRemoteProduct(addedItem.id);
             let new_items = state.addedItems.filter(item=>item.id !== action.id)
             let newTotal = state.total - parseFloat(addedItem.price)
             return{
@@ -82,6 +105,7 @@ const cartReducer= (state = initState,action)=>{
         }
         else {
             addedItem.quantity -= 1
+            updateRemoteProductCart(addedItem.id,addedItem.quantity);
             let newTotal = state.total - parseFloat(addedItem.price)
             return{
                 ...state,

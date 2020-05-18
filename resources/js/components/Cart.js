@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import { removeItem,addQuantity,subtractQuantity} from './actions/cartActions'
+import { listCartProducts, removeItem,addQuantity,subtractQuantity} from './actions/cartActions'
 import Recipe from "./Recipe";
 class Cart extends Component{
+
+    constructor(props) {
+        super(props);
+        props.listCartProducts();
+    }
 
     //to remove the item completely
     handleRemove = (id)=>{
@@ -76,7 +81,8 @@ const mapDispatchToProps = (dispatch)=>{
     return{
         removeItem: (id)=>{dispatch(removeItem(id))},
         addQuantity: (id)=>{dispatch(addQuantity(id))},
-        subtractQuantity: (id)=>{dispatch(subtractQuantity(id))}
+        subtractQuantity: (id)=>{dispatch(subtractQuantity(id))},
+        listCartProducts: ()=>{dispatch(listCartProducts())}
     }
 }
 export default connect(mapStateToProps,mapDispatchToProps)(Cart)
