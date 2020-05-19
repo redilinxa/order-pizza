@@ -65,7 +65,7 @@ class Cart extends Component{
                 <h5>You have ordered:</h5>
                 <ul className="collection">
                     {addedItems}
-                    <li className="collection-item"><b>Total: {this.props.cartTotal} $</b></li>
+                    <li className="collection-item justify-content-end"><b>Total: {this.props.cartTotal} $</b></li>
                 </ul>
             </div>
         )

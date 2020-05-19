@@ -2,7 +2,7 @@ import React from 'react';
 import Home from './Home'
 import Cart from "./Cart";
 import Order from "./Order";
-import { clearOrder } from './actions/cartActions'
+import {addShippingAddress, clearOrder} from './actions/cartActions'
 import axios from 'axios';
 import {connect} from "react-redux";
 
@@ -10,8 +10,7 @@ class MasterForm extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            currentStep: 1,
-            shippingAddress:  '',
+            currentStep: 1
         }
     }
 
@@ -24,11 +23,9 @@ class MasterForm extends React.Component {
 
     handleSubmit = event => {
         event.preventDefault()
-        console.log(this.props)
-        const { shippingAddress } = this.state
         var bodyFormData = new FormData();
         bodyFormData.set('total', this.props.total);
-        bodyFormData.set('shippingAddress', shippingAddress);
+        bodyFormData.set('shippingAddress', this.props.shippingAddress);
         let details = [];
         this.props.items.map(item=>{
             details.push({
@@ -50,9 +47,11 @@ class MasterForm extends React.Component {
             this.setState({
               currentStep:1
             })
+            alert('Your order number ' + response.data[0].id + ' is confirmed ' + response.data[0].user.name +' !')
             console.log(response);
         })
         .catch(response=> {
+            alert('We are sorry to inform you that there was an issue with the order ' + response.data[0].id + ' ' + response.data[0].user.name)
             //handle error
             console.log(response);
         });
@@ -159,7 +158,6 @@ function Step3(props) {
     return(
         <React.Fragment>
             <Order />
-            <button className="btn btn-success btn-block">Confirm order!</button>
         </React.Fragment>
     );
 }
@@ -167,7 +165,8 @@ function Step3(props) {
 const mapStateToProps = (state)=>{
     return{
         total: state.total > 0 ? state.total :state.cachedTotal,
-        items: state.addedItems.length > 0 ? state.addedItems :state.cachedCart
+        items: state.addedItems.length > 0 ? state.addedItems :state.cachedCart,
+        shippingAddress: state.shippingAddress
     }
 }
 

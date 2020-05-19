@@ -27,4 +27,11 @@ class OrderService
 
         return $order;
     }
+
+    public function formatResponse(Order $order){
+
+        return [
+            $order->load('user','details')
+        ];
+    }
 }

@@ -6,6 +6,7 @@ const initState = {
     total: 0,
     cachedCart:[],
     cachedTotal: 0,
+    shippingAddress: ''
 };
 const updateRemoteProductCart = (id,qty)=>{
     console.log(id,qty);
@@ -133,17 +134,21 @@ const cartReducer= (state = initState,action)=>{
           }
     }
 
-    if(action.type=== 'SUB_SHIPPING'){
-        return{
+    if(action.type=== 'SUB_SHIPPING') {
+        return {
             ...state,
             total: (parseFloat(state.total) - 2).toFixed(2)
         }
-  }
-
-  else{
-    return state
     }
 
+    if (action.type === 'ADD_ADDRESS_INFO') {
+        return {
+            ...state,
+            shippingAddress: action.shippingAddress
+        }
+    }
+
+    return state;
 }
 
 export default cartReducer
