@@ -1,4 +1,4 @@
-import { LOAD_PRODUCTS,LIST_CART_PRODUCTS, ADD_TO_CART,REMOVE_ITEM,SUB_QUANTITY,ADD_QUANTITY,ADD_SHIPPING } from '../actions/action-types/cart-actions'
+import { LOAD_PRODUCTS,LIST_CART_PRODUCTS, ADD_TO_CART,REMOVE_ITEM,SUB_QUANTITY,ADD_QUANTITY,ADD_SHIPPING, CLEAR_ORDER } from '../actions/action-types/cart-actions'
 import axios from 'axios'
 const initState = {
     items: [],
@@ -28,6 +28,15 @@ const addRemoteProduct = (id)=>{
 const cartReducer= (state = initState,action)=>{
     console.log(action.type);
     //INSIDE HOME COMPONENT
+    if(action.type === CLEAR_ORDER){
+        return {
+            ...state,
+            addedItems:[],
+            cachedCart:[],
+            total:0,
+            cachedTotal:0
+        }
+    }
     if(action.type === LOAD_PRODUCTS){
         return {
             ...state,

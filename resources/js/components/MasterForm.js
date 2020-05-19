@@ -2,6 +2,7 @@ import React from 'react';
 import Home from './Home'
 import Cart from "./Cart";
 import Order from "./Order";
+import { clearOrder } from './actions/cartActions'
 import axios from 'axios';
 import {connect} from "react-redux";
 
@@ -37,20 +38,24 @@ class MasterForm extends React.Component {
         })
         console.log(details);
         bodyFormData.set('details', JSON.stringify(details));
+
         axios({
             method: 'post',
             url: 'orders/create',
             data: bodyFormData,
             headers: {'Content-Type': 'multipart/form-data' }
         })
-            .then(function (response) {
-                //handle success
-                console.log(response);
+        .then(response=> {
+            this.props.clearOrder();
+            this.setState({
+              currentStep:1
             })
-            .catch(function (response) {
-                //handle error
-                console.log(response);
-            });
+            console.log(response);
+        })
+        .catch(response=> {
+            //handle error
+            console.log(response);
+        });
     }
 
     _next = () => {
@@ -166,4 +171,10 @@ const mapStateToProps = (state)=>{
     }
 }
 
-export default connect(mapStateToProps)(MasterForm)
+const mapDispatchToProps = (dispatch)=>{
+    return{
+        clearOrder: ()=>{dispatch({type: 'CLEAR_ORDER'})},
+    }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(MasterForm)
