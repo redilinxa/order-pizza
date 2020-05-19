@@ -31,7 +31,8 @@ class Recipe extends Component{
                         <span>Shipping(+2$)</span>
                     </label>
                 </li>
-                <li className="collection-item justify-content-end"><b>Total: {this.props.total} $</b></li>
+                <li className="collection-item justify-content-end"><b>Total: {this.props.total} €</b></li>
+                <li className="collection-item justify-content-end"><b>Total (US Dollar): {(this.props.total * 1.1).toFixed(2)} $</b></li>
                 <li className="collection-item justify-content-end">
                     <textarea placeholder="Shipping Address/Additional Notes" className = "w-auto h-auto form-control" cols="30" rows="5" onChange= {this.handleShippingAddress}></textarea>
                 </li>

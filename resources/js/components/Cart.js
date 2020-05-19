@@ -40,7 +40,7 @@ class Cart extends Component{
                                     <p>{item.description}</p>
                                 </div>
                                 <div className="ml-auto">
-                                    <p><b>Price: {item.price}$</b></p>
+                                    <p><b>Price: {item.price}€</b></p>
                                     <p>
                                         <b>Quantity: {item.quantity}</b>
                                     </p>
@@ -65,7 +65,8 @@ class Cart extends Component{
                 <h5>You have ordered:</h5>
                 <ul className="collection">
                     {addedItems}
-                    <li className="collection-item justify-content-end"><b>Total: {this.props.cartTotal} $</b></li>
+                    <li className="collection-item justify-content-end"><b>Total: {this.props.cartTotal} €</b></li>
+                    <li className="collection-item justify-content-end"><b>Total (US Dollar): {(this.props.cartTotal * 1.1).toFixed(2)} $</b></li>
                 </ul>
             </div>
         )
