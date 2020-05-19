@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {LOAD_PRODUCTS, ADD_TO_CART,REMOVE_ITEM,SUB_QUANTITY,ADD_QUANTITY} from './action-types/cart-actions'
+import {LOAD_PRODUCTS, LIST_CART_PRODUCTS, ADD_TO_CART,REMOVE_ITEM,SUB_QUANTITY,ADD_QUANTITY, CLEAR_ORDER} from './action-types/cart-actions'
 
 export function getProducts(){
     return function(dispatch){
@@ -9,6 +9,21 @@ export function getProducts(){
     }
 }
 
+export function listCartProducts(){
+    return function(dispatch){
+        return axios.get('/cart').then(response => {
+            console.log(response.data);
+            dispatch({type:LIST_CART_PRODUCTS, products: response.data.products, total:response.data.total})
+        })
+    }
+}
+
+
+export const clearOrder=()=>{
+    return{
+        type: CLEAR_ORDER
+    }
+}
 //add cart action
 export const addToCart= (id)=>{
     return{

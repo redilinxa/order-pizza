@@ -11,10 +11,10 @@ class Order extends Model
     protected $fillable = ['user_id', 'total', 'notes'];
 
     public function user(){
-        $this->belongsTo('App\User');
+        return $this->belongsTo('App\User');
     }
 
     public function details(){
-        $this->hasMany('App\OrderDetail');
+        return $this->hasMany('App\OrderDetail');
     }
 }

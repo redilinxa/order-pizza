@@ -1,6 +1,5 @@
 .box{
     display: flex;
-    justify-content: space-between;
     flex-wrap: wrap
 }
 .card-product .card-image {
@@ -12,6 +11,7 @@
 }
 .card-product{
     width: 300px;
+    margin: 30px;
 }
 .card-product .card-image .card-title{
     color: black;
@@ -41,4 +41,25 @@
 }
 .card-product .card-image img{
     height: 200px;
+}
+.btn-floating .material-icons i{
+    line-height: 1;
+}
+
+.collection .collection-item.avatar {
+    padding-left:0;
+    .item-img {
+        max-width: 300px;
+        margin-right: 30px;
+        img {
+            width: 100%;
+        }
+    }
+    .add-remove {
+        button {
+            background: transparent;
+            border: 0;
+            box-shadow: none;
+        }
+    }
 }
