@@ -33,13 +33,15 @@ class OrderController
     }
 
     /**
-     * The route responsible for creating the order
+     * The route responsible for creating the order, Validation errors are handled in the Exception Handler.
+     * Check the OrderRequest.
      * @param OrderRequest $request. Handles all order validations
      * @return \Illuminate\Http\JsonResponse
      */
     public function create(OrderRequest $request){
         $order = $this->orderService->addOrder($request->user(),$request->all());
-        return response()->json($order);
+        return response()->json(
+            $this->orderService->formatResponse($order)
+        );
     }
-
 }
