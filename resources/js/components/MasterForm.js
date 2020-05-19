@@ -1,16 +1,17 @@
 import React from 'react';
 import Home from './Home'
-import ReactDOM from 'react-dom';
-import {connect} from "react-redux";
 import Cart from "./Cart";
+import Order from "./Order";
+import { clearOrder } from './actions/cartActions'
+import axios from 'axios';
+import {connect} from "react-redux";
 
 class MasterForm extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
             currentStep: 1,
-            pizzas:  '',
-            selectedPizzas: '',
+            shippingAddress:  '',
         }
     }
 
@@ -23,8 +24,38 @@ class MasterForm extends React.Component {
 
     handleSubmit = event => {
         event.preventDefault()
-        const { selectedPizzas } = this.state
+        console.log(this.props)
+        const { shippingAddress } = this.state
+        var bodyFormData = new FormData();
+        bodyFormData.set('total', this.props.total);
+        bodyFormData.set('shippingAddress', shippingAddress);
+        let details = [];
+        this.props.items.map(item=>{
+            details.push({
+                'product_id':item.id,
+                'quantity':item.quantity
+            });
+        })
+        console.log(details);
+        bodyFormData.set('details', JSON.stringify(details));
 
+        axios({
+            method: 'post',
+            url: 'orders/create',
+            data: bodyFormData,
+            headers: {'Content-Type': 'multipart/form-data' }
+        })
+        .then(response=> {
+            this.props.clearOrder();
+            this.setState({
+              currentStep:1
+            })
+            console.log(response);
+        })
+        .catch(response=> {
+            //handle error
+            console.log(response);
+        });
     }
 
     _next = () => {
@@ -75,6 +106,7 @@ class MasterForm extends React.Component {
     }
 
     render() {
+
         return (
             <React.Fragment>
                 <form onSubmit={this.handleSubmit}>
@@ -86,17 +118,15 @@ class MasterForm extends React.Component {
                     <Step1
                         currentStep={this.state.currentStep}
                         handleChange={this.handleChange}
-                        email={this.state.email}
                     />
                     <Step2
                         currentStep={this.state.currentStep}
                         handleChange={this.handleChange}
-                        username={this.state.username}
                     />
                     <Step3
                         currentStep={this.state.currentStep}
                         handleChange={this.handleChange}
-                        password={this.state.password}
+                        shippingAddress={this.state.shippingAddress}
                     />
                 </form>
             </React.Fragment>
@@ -128,9 +158,23 @@ function Step3(props) {
     }
     return(
         <React.Fragment>
-            <button className="btn btn-success btn-block">Sign up</button>
+            <Order />
+            <button className="btn btn-success btn-block">Confirm order!</button>
         </React.Fragment>
     );
 }
 
-export default MasterForm;
+const mapStateToProps = (state)=>{
+    return{
+        total: state.total > 0 ? state.total :state.cachedTotal,
+        items: state.addedItems.length > 0 ? state.addedItems :state.cachedCart
+    }
+}
+
+const mapDispatchToProps = (dispatch)=>{
+    return{
+        clearOrder: ()=>{dispatch({type: 'CLEAR_ORDER'})},
+    }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(MasterForm)

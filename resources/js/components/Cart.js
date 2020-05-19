@@ -6,7 +6,6 @@ class Cart extends Component{
 
     constructor(props) {
         super(props);
-        props.listCartProducts();
     }
 
     //to remove the item completely
@@ -18,7 +17,7 @@ class Cart extends Component{
         this.props.addQuantity(id);
         this.forceUpdate();
     }
-    //to substruct from the quantity
+    //to subtract from the quantity
     handleSubtractQuantity = (id)=>{
         this.props.subtractQuantity(id);
         this.forceUpdate();
@@ -46,8 +45,8 @@ class Cart extends Component{
                                         <b>Quantity: {item.quantity}</b>
                                     </p>
                                     <div className="add-remove">
-                                        <button src="#"><i className="material-icons" onClick={()=>{this.handleAddQuantity(item.id)}}>arrow_drop_up</i></button>
-                                        <button src="#"><i className="material-icons" onClick={()=>{this.handleSubtractQuantity(item.id)}}>arrow_drop_down</i></button>
+                                        <button type="button"><i className="material-icons" onClick={()=>{this.handleAddQuantity(item.id)}}>arrow_drop_up</i></button>
+                                        <button type="button"><i className="material-icons" onClick={()=>{this.handleSubtractQuantity(item.id)}}>arrow_drop_down</i></button>
                                     </div>
                                     <button className="waves-effect waves-light btn pink remove" onClick={()=>{this.handleRemove(item.id)}}>Remove</button>
                                 </div>
@@ -66,8 +65,8 @@ class Cart extends Component{
                 <h5>You have ordered:</h5>
                 <ul className="collection">
                     {addedItems}
+                    <li className="collection-item"><b>Total: {this.props.cartTotal} $</b></li>
                 </ul>
-                <Recipe />
             </div>
         )
     }
@@ -75,9 +74,10 @@ class Cart extends Component{
 
 
 const mapStateToProps = (state)=>{
+    console.log(state.addedItems,state.cachedCart)
     return{
-        items: state.addedItems,
-        //addedItems: state.addedItems
+        items: state.addedItems.length>0 ?state.addedItems :state.cachedCart,
+        cartTotal: state.total > 0 ? state.total :state.cachedTotal
     }
 }
 const mapDispatchToProps = (dispatch)=>{
