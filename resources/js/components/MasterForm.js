@@ -2,6 +2,8 @@ import React from 'react';
 import Home from './Home'
 import Cart from "./Cart";
 import Order from "./Order";
+import axios from 'axios';
+import {connect} from "react-redux";
 
 class MasterForm extends React.Component {
     constructor(props) {
@@ -21,8 +23,34 @@ class MasterForm extends React.Component {
 
     handleSubmit = event => {
         event.preventDefault()
-        const { addedItems,total,shippingAddress } = this.state
-
+        console.log(this.props)
+        const { shippingAddress } = this.state
+        var bodyFormData = new FormData();
+        bodyFormData.set('total', this.props.total);
+        bodyFormData.set('shippingAddress', shippingAddress);
+        let details = [];
+        this.props.items.map(item=>{
+            details.push({
+                'product_id':item.id,
+                'quantity':item.quantity
+            });
+        })
+        console.log(details);
+        bodyFormData.set('details', JSON.stringify(details));
+        axios({
+            method: 'post',
+            url: 'orders/create',
+            data: bodyFormData,
+            headers: {'Content-Type': 'multipart/form-data' }
+        })
+            .then(function (response) {
+                //handle success
+                console.log(response);
+            })
+            .catch(function (response) {
+                //handle error
+                console.log(response);
+            });
     }
 
     _next = () => {
@@ -73,6 +101,7 @@ class MasterForm extends React.Component {
     }
 
     render() {
+
         return (
             <React.Fragment>
                 <form onSubmit={this.handleSubmit}>
@@ -84,17 +113,15 @@ class MasterForm extends React.Component {
                     <Step1
                         currentStep={this.state.currentStep}
                         handleChange={this.handleChange}
-                        email={this.state.email}
                     />
                     <Step2
                         currentStep={this.state.currentStep}
                         handleChange={this.handleChange}
-                        username={this.state.username}
                     />
                     <Step3
                         currentStep={this.state.currentStep}
                         handleChange={this.handleChange}
-                        password={this.state.password}
+                        shippingAddress={this.state.shippingAddress}
                     />
                 </form>
             </React.Fragment>
@@ -132,4 +159,11 @@ function Step3(props) {
     );
 }
 
-export default MasterForm;
+const mapStateToProps = (state)=>{
+    return{
+        total: state.total > 0 ? state.total :state.cachedTotal,
+        items: state.addedItems.length > 0 ? state.addedItems :state.cachedCart
+    }
+}
+
+export default connect(mapStateToProps)(MasterForm)

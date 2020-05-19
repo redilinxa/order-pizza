@@ -32,7 +32,7 @@ class OrderRequest extends FormRequest
     {
         return [
             'total' => 'required|min:1',
-            'details.quantity' => 'required|min:1',
+            //'details.quantity' => 'required|min:1',
         ];
     }
 

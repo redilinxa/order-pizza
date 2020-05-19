@@ -6,7 +6,6 @@ class Cart extends Component{
 
     constructor(props) {
         super(props);
-        props.listCartProducts();
     }
 
     //to remove the item completely
@@ -46,8 +45,8 @@ class Cart extends Component{
                                         <b>Quantity: {item.quantity}</b>
                                     </p>
                                     <div className="add-remove">
-                                        <button src="#"><i className="material-icons" onClick={()=>{this.handleAddQuantity(item.id)}}>arrow_drop_up</i></button>
-                                        <button src="#"><i className="material-icons" onClick={()=>{this.handleSubtractQuantity(item.id)}}>arrow_drop_down</i></button>
+                                        <button type="button"><i className="material-icons" onClick={()=>{this.handleAddQuantity(item.id)}}>arrow_drop_up</i></button>
+                                        <button type="button"><i className="material-icons" onClick={()=>{this.handleSubtractQuantity(item.id)}}>arrow_drop_down</i></button>
                                     </div>
                                     <button className="waves-effect waves-light btn pink remove" onClick={()=>{this.handleRemove(item.id)}}>Remove</button>
                                 </div>
@@ -75,9 +74,10 @@ class Cart extends Component{
 
 
 const mapStateToProps = (state)=>{
+    console.log(state.addedItems,state.cachedCart)
     return{
-        items: state.addedItems,
-        cartTotal: state.total
+        items: state.addedItems.length>0 ?state.addedItems :state.cachedCart,
+        cartTotal: state.total > 0 ? state.total :state.cachedTotal
     }
 }
 const mapDispatchToProps = (dispatch)=>{

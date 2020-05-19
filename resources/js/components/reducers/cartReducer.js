@@ -3,7 +3,9 @@ import axios from 'axios'
 const initState = {
     items: [],
     addedItems:[],
-    total: 0
+    total: 0,
+    cachedCart:[],
+    cachedTotal: 0,
 };
 const updateRemoteProductCart = (id,qty)=>{
     console.log(id,qty);
@@ -36,8 +38,8 @@ const cartReducer= (state = initState,action)=>{
         console.log(state.items);
         return {
             ...state,
-            //addedItems: action.products,
-            //total: action.total
+            cachedCart: action.products,
+            cachedTotal: action.total
         }
     }
     if(action.type === ADD_TO_CART){

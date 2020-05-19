@@ -50,7 +50,7 @@ class Order extends Component{
 
 const mapStateToProps = (state)=>{
     return{
-        items: state.addedItems,
+        items: state.addedItems.length>0 ?state.addedItems :state.cachedCart
         //addedItems: state.addedItems
     }
 }

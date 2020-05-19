@@ -17,14 +17,6 @@ class Recipe extends Component{
         }
     }
 
-    handleShippingAddress = (e)=>{
-        // this.setState(state=>{
-        //     return {
-        //         shippingAddress: e.target.value
-        //     }
-        // })
-    }
-
     render(){
 
         return(
@@ -46,8 +38,8 @@ class Recipe extends Component{
 
 const mapStateToProps = (state)=>{
     return{
-        addedItems: state.addedItems,
-        total: state.total
+        total: state.total > 0 ? state.total :state.cachedTotal,
+        items: state.addedItems.length > 0 ? state.addedItems :state.cachedCart
     }
 }
 

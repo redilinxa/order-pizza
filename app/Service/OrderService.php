@@ -23,7 +23,7 @@ class OrderService
             'notes' => $data['shippingAddress']
         ]);
 
-        $order->details()->createMany($data['details']);
+        $order->details()->createMany(json_decode($data['details'],true));
 
         return $order;
     }
