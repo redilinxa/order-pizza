@@ -1,4 +1,12 @@
-## Project Requirements.
+## Payment Gateway - Customer Transactions API
+##### Description  
+This implementation was carried through with the following technical specifications:
+- PHP Framework Laravel 7
+- remotemysql.com was used as database host
+- Laravel builtin Web Server.
+- ReacJs fof front end.
+
+### Project Requirements.
 1. Task description
 Let’s say you want to start a new pizza delivery business. Please create a web application for
 ordering pizza for your clients, which contains a shopping cart. Take the pizza order and the
@@ -28,3 +36,24 @@ application URL (e.g. in Heroku).
 • Free mysql db host (https://remotemysql.com/);
 • Use Git as code source management tool (following Git Flow will be assessed)
 • Add Readme.md file
+
+### Installation
+
+After cloning the repository on the master branch, carry on the following
+- Cloning the repository.
+- cd into project directory.
+- execute `composer install` (https://getcomposer.org/) if not installed.
+- Create a database with name 'payment-gateway' and adjust the database host, port, username, password variables on the `.env.example`.
+- rename `.env.example` to `.env`.
+- execute `php artisan migrate:install`.
+- execute `php artisan migrate`.
+- execute `npm install && npm run dev` (nodejs.org) if not installed for the assets build.
+- run local server `php artisan serve` and follow the link. 
+- If you are having issues setting up, a docker configuration could follow up if needed. Please email`redilinxa@gmail.com` for support.
+
+
+### Usage
+- Open the route `http://laravel-yummi-pizza.herokuapp.com/register`.
+- Register a user. and login.
+- Follow the flow until the end. if you have not completed all the flow to ordering the pizzas.
+- After the completion of the order the system will notify you and send you to the menu page again.
