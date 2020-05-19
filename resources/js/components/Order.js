@@ -11,7 +11,7 @@ class Order extends Component{
 
                         <li className="collection-item avatar" key={item.id}>
                             <div className="item-img">
-                                <img src={"/images/"+item.image_url} alt={item.image_url} className=""/>
+                                <img src={"/images/"+item.image_url} alt={item.image_url}/>
                             </div>
 
                             <div className="item-desc d-flex w-100">
@@ -28,7 +28,6 @@ class Order extends Component{
                             </div>
 
                         </li>
-
                     )
                 })
             ):
@@ -42,6 +41,7 @@ class Order extends Component{
                     {addedItems}
                 </ul>
                 <Recipe />
+                <button className="btn btn-success btn-block" disabled={this.props.items.length == 0 ? 'disabled' : ''}>Confirm order!</button>
             </div>
         )
     }
@@ -51,7 +51,6 @@ class Order extends Component{
 const mapStateToProps = (state)=>{
     return{
         items: state.addedItems.length>0 ?state.addedItems :state.cachedCart
-        //addedItems: state.addedItems
     }
 }
 export default connect(mapStateToProps)(Order)

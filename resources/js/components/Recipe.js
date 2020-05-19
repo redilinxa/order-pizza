@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { addShipping } from './actions/cartActions'
+import { addShipping,addShippingAddress } from './actions/cartActions'
 class Recipe extends Component{
 
     componentWillUnmount() {
@@ -17,19 +17,23 @@ class Recipe extends Component{
         }
     }
 
+    handleShippingAddress = (e)=>{
+        this.props.addShippingAddress(e.target.value);
+    }
+
     render(){
 
         return(
             <div className="collection">
-                <li className="collection-item">
+                <li className="collection-item justify-content-end">
                     <label>
                         <input type="checkbox" ref="shipping" onChange= {this.handleChecked} />
                         <span>Shipping(+2$)</span>
                     </label>
                 </li>
-                <li className="collection-item"><b>Total: {this.props.total} $</b></li>
-                <li className="collection-item">
-                    <input type="textarea" ref="shippingAddress" onChange= {this.handleShippingAddress} />
+                <li className="collection-item justify-content-end"><b>Total: {this.props.total} $</b></li>
+                <li className="collection-item justify-content-end">
+                    <textarea placeholder="Shipping Address/Additional Notes" className = "w-auto h-auto form-control" cols="30" rows="5" onChange= {this.handleShippingAddress}></textarea>
                 </li>
             </div>
         )
@@ -46,7 +50,8 @@ const mapStateToProps = (state)=>{
 const mapDispatchToProps = (dispatch)=>{
     return{
         addShipping: ()=>{dispatch({type: 'ADD_SHIPPING'})},
-        substractShipping: ()=>{dispatch({type: 'SUB_SHIPPING'})}
+        substractShipping: ()=>{dispatch({type: 'SUB_SHIPPING'})},
+        addShippingAddress: (shippingAddress)=>{dispatch(addShippingAddress(shippingAddress))}
     }
 }
 
